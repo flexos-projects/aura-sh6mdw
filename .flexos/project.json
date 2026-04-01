@@ -1,0 +1,60 @@
+{
+  "name": "Aura",
+  "slug": "aura",
+  "tagline": "The mathematics of your perfect wardrobe.",
+  "description": "An AI stylist that decodes your biological color season and body geometry to build a wardrobe that is undeniably, effortlessly yours.",
+  "domain": "aura-style.com",
+  "brand": {
+    "personality": [
+      "authoritative",
+      "elegant",
+      "precise",
+      "empowering"
+    ],
+    "values": [
+      "precision over volume",
+      "sustainability through perfect fit",
+      "biological truth over fleeting trends"
+    ],
+    "visualMood": "A high-end editorial fashion magazine meets a minimalist architect's studio. Deep charcoals, alabaster whites, sharp typography, and deliberate, museum-like white space.",
+    "voiceAttributes": [
+      "speaks like a high-end personal stylist",
+      "uses exact, descriptive terminology (e.g., 'cool olive undertones', 'structured draping')",
+      "never promotes mindless consumption",
+      "confident and unhurried"
+    ],
+    "references": [
+      "SSENSE editorial layouts",
+      "The clean math of Dieter Rams' design",
+      "High-end bespoke tailoring environments"
+    ]
+  },
+  "stack": {
+    "framework": {
+      "name": "Nuxt 4",
+      "why": "Server-side rendering for speed, combined with a highly app-like client experience for the daily styling flows."
+    },
+    "database": {
+      "name": "Supabase (PostgreSQL)",
+      "why": "Relational data is critical here (Users -> Profiles -> Wardrobes -> Outfits). Vector support for semantic clothing search."
+    },
+    "auth": {
+      "name": "Clerk",
+      "why": "Frictionless onboarding, handles secure storage of user profile data."
+    },
+    "ai_vision": {
+      "name": "OpenAI GPT-4o Vision API",
+      "why": "To analyze user onboarding photos for skin undertones and structural body mapping, and to tag uploaded clothing images."
+    },
+    "hosting": {
+      "name": "Vercel",
+      "why": "Edge caching for fast image delivery and seamless deployments."
+    },
+    "storage": {
+      "name": "Cloudinary",
+      "why": "On-the-fly image transformations, background removal for wardrobe uploads, and precise color-profile delivery."
+    }
+  },
+  "version": "1.0",
+  "createdAt": "2026-04-01"
+}

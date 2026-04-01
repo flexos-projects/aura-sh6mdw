@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura | Your Wardrobe, Decoded</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root[data-theme="dark"] {
+    --color-bg: oklch(14% 0.005 250);
+    --color-surface: oklch(18% 0.008 250);
+    --color-surface-raised: oklch(22% 0.01 250);
+    --color-border: oklch(25% 0.01 250);
+    --color-text: oklch(95% 0.005 250);
+    --color-text-secondary: oklch(75% 0.01 250);
+    --color-text-muted: oklch(55% 0.01 250);
+    --color-accent: oklch(60% 0.15 45);
+    
+    /* Dynamic Palette Variables */
+    --dyn-primary: oklch(25% 0.05 250);
+    --dyn-secondary: oklch(35% 0.05 250);
+    --dyn-accent: oklch(85% 0.02 250);
+  }
+
+  :root[data-theme="light"] {
+    --color-bg: oklch(98% 0.002 90);
+    --color-surface: oklch(100% 0 0);
+    --color-surface-raised: oklch(96% 0.005 90);
+    --color-border: oklch(88% 0.01 90);
+    --color-text: oklch(20% 0.01 250);
+    --color-text-secondary: oklch(45% 0.01 250);
+    --color-text-muted: oklch(65% 0.01 250);
+    --color-accent: oklch(55% 0.16 45);
+
+    /* Dynamic Palette Variables */
+    --dyn-primary: oklch(90% 0.02 90);
+    --dyn-secondary: oklch(85% 0.02 90);
+    --dyn-accent: oklch(20% 0.05 250);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: 'Outfit', sans-serif;
+    line-height: 1.5;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-display { font-family: 'Cormorant Garamond', serif; font-weight: 400; line-height: 1.1; }
+  .font-mono { font-family: 'Space Mono', monospace; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* Layout */
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+  
+  /* Nav */
+  header {
+    padding: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+  }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-style: italic; font-weight: 600; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { color: var(--color-text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--color-text); }
+  .controls { display: flex; align-items: center; gap: 1rem; }
+  .theme-toggle { background: none; border: 1px solid var(--color-border); color: var(--color-text); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+  .theme-toggle:hover { border-color: var(--color-text); }
+
+  /* Button */
+  .btn {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    border: none;
+    padding: 1rem 2rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: transform 0.3s, background-color 0.3s;
+  }
+  .btn:hover { transform: translateY(-2px); background-color: var(--color-accent); color: #fff; }
+
+  /* Hero */
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 4rem 0;
+  }
+  .hero-content {
+    max-width: 800px;
+    z-index: 2;
+  }
+  .hero-tag {
+    display: inline-block;
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 2rem;
+    color: var(--color-text-secondary);
+  }
+  .hero h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+  .hero h1 i { color: var(--color-text-secondary); }
+  .hero p { font-size: 1.25rem; color: var(--color-text-secondary); max-width: 600px; margin-bottom: 3rem; font-weight: 300; }
+  
+  .hero-graphic {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50vw;
+    height: 80vh;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .shape {
+    position: absolute;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    opacity: 0.3;
+  }
+  .shape-1 { width: 600px; height: 800px; border-radius: 400px; right: -100px; top: -100px; transform: rotate(15deg); border-color: var(--color-accent); }
+  .shape-2 { width: 400px; height: 600px; border-radius: 200px; right: 200px; top: 100px; transform: rotate(-10deg); }
+
+  /* Interactive Engine */
+  .engine-section {
+    padding: 8rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .engine-header { margin-bottom: 4rem; text-align: center; }
+  .engine-header h2 { font-size: 3rem; margin-bottom: 1rem; }
+  .engine-header p { color: var(--color-text-secondary); max-width: 500px; margin: 0 auto; }
+
+  .engine-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .engine-controls {
+    background-color: var(--color-surface);
+    padding: 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+  }
+  
+  .control-group { margin-bottom: 2.5rem; }
+  .control-group:last-child { margin-bottom: 0; }
+  .control-group h3 { font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em; color: var(--color-text-muted); margin-bottom: 1rem; text-transform: uppercase; }
+  
+  .option-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s;
+    border-radius: 2px;
+  }
+  .option-btn:hover { border-color: var(--color-text); color: var(--color-text); }
+  .option-btn.active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    border-color: var(--color-text);
+  }
+
+  .engine-display {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .garment-card {
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .garment-visual {
+    aspect-ratio: 3/4;
+    background-color: var(--dyn-primary);
+    border: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.8s ease;
+  }
+  
+  /* Abstract Clothing Shapes */
+  .abstract-item { width: 60%; height: 60%; position: relative; transition: all 0.8s ease; }
+  .item-top { background-color: var(--dyn-secondary); clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 90% 100%, 10% 100%, 0% 20%); }
+  .item-bottom { background-color: var(--dyn-secondary); clip-path: polygon(20% 0%, 80% 0%, 90% 100%, 60% 100%, 50% 20%, 40% 100%, 10% 100%); }
+  .item-shoe { background-color: var(--dyn-accent); clip-path: polygon(0% 50%, 30% 0%, 70% 0%, 100% 50%, 100% 100%, 0% 100%); height: 30%; top: 35%; }
+
+  .garment-card .score-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--color-bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    border: 1px solid var(--color-border);
+  }
+
+  .garment-meta h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .garment-meta p { color: var(--color-text-secondary); font-size: 0.875rem; line-height: 1.6; }
+
+  /* Details Panel */
+  .engine-rationale {
+    grid-column: 1 / -1;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .rationale-text { flex: 1; max-width: 600px; }
+  .rationale-text h4 { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--color-accent); margin-bottom: 0.5rem; text-transform: uppercase; }
+  .rationale-text p { font-size: 1.125rem; font-style: italic; font-family: 'Cormorant Garamond', serif; }
+  
+  .color-swatches { display: flex; gap: 0.5rem; }
+  .swatch { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--color-border); transition: background-color 0.8s ease; }
+
+  /* Bento Features */
+  .features-section { padding: 8rem 0; }
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 300px);
+    gap: 1.5rem;
+  }
+  .bento-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+  }
+  .bento-card:nth-child(1) { grid-column: span 2; }
+  .bento-card:nth-child(4) { grid-column: span 2; }
+  .bento-icon { position: absolute; top: 3rem; left: 3rem; color: var(--color-text-muted); }
+  .bento-card h3 { font-size: 2rem; margin-bottom: 0.5rem; }
+  .bento-card p { color: var(--color-text-secondary); font-size: 1rem; max-width: 400px; }
+
+  @media (max-width: 1024px) {
+    .engine-grid { grid-template-columns: 1fr; }
+    .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .bento-card { grid-column: 1 !important; min-height: 300px; }
+  }
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 3rem; }
+    .engine-display { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="container">
+    <div class="logo">Aura.</div>
+    <nav class="nav-links">
+      <a href="#vision">The Science</a>
+      <a href="#engine">The Engine</a>
+      <a href="#features">Features</a>
+    </nav>
+    <div class="controls">
+      <button class="theme-toggle" id="themeToggle">
+        <i data-lucide="moon" id="themeIcon"></i>
+      </button>
+      <button class="btn">Discover Your DNA</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero-graphic">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-tag font-mono">Biological Style Mapping</div>
+        <h1>Fashion, decoded <br><i>for your DNA.</i></h1>
+        <p>Aura scans your skin undertones and bone structure to build a 2026 wardrobe that is mathematically, undeniably yours. Stop guessing. Start knowing.</p>
+        <button class="btn">Begin The Scan</button>
+      </div>
+    </section>
+
+    <section id="engine" class="engine-section container">
+      <div class="engine-header">
+        <h2>The Translation Engine</h2>
+        <p>Select a biological profile to see how Aura filters and translates 2026 trends for specific geometries.</p>
+      </div>
+
+      <div class="engine-grid">
+        <aside class="engine-controls">
+          <div class="control-group">
+            <h3>Color Season</h3>
+            <button class="option-btn season-btn active" data-season="winter">Deep Winter</button>
+            <button class="option-btn season-btn" data-season="autumn">Soft Autumn</button>
+            <button class="option-btn season-btn" data-season="spring">Clear Spring</button>
+          </div>
+          <div class="control-group">
+            <h3>Body Geometry</h3>
+            <button class="option-btn body-btn active" data-body="dramatic">Dramatic (Structured)</button>
+            <button class="option-btn body-btn" data-body="romantic">Romantic (Curved)</button>
+          </div>
+        </aside>
+
+        <div class="engine-output">
+          <div class="engine-display">
+            <!-- Top -->
+            <div class="garment-card">
+              <div class="garment-visual">
+                <div class="abstract-item item-top"></div>
+                <div class="score-badge">98% Match</div>
+              </div>
+              <div class="garment-meta">
+                <h4 id="top-title">Structured Wool Blazer</h4>
+                <p id="top-desc">Sharp, geometric lapels respect your strong vertical line.</p>
+              </div>
+            </div>
+            <!-- Bottom -->
+            <div class="garment-card">
+              <div class="garment-visual">
+                <div class="abstract-item item-bottom"></div>
+                <div class="score-badge">96% Match</div>
+              </div>
+              <div class="garment-meta">
+                <h4 id="bot-title">Tapered Charcoal Trouser</h4>
+                <p id="bot-desc">High contrast, clean drape without breaking the silhouette.</p>
+              </div>
+            </div>
+            <!-- Shoe -->
+            <div class="garment-card">
+              <div class="garment-visual">
+                <div class="abstract-item item-shoe"></div>
+                <div class="score-badge">99% Match</div>
+              </div>
+              <div class="garment-meta">
+                <h4 id="shoe-title">Pointed Silver Boot</h4>
+                <p id="shoe-desc">Elongates the line, providing the high-contrast pop required for Winter.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="engine-rationale">
+            <div class="rationale-text">
+              <h4>System Analysis</h4>
+              <p id="rationale-desc">"For a Deep Winter Dramatic, we reject the 2026 oversized pastel trend. Instead, we utilize high-contrast icy tones and sharp tailoring to honor your natural architecture."</p>
+            </div>
+            <div class="color-swatches" id="swatch-container">
+              <div class="swatch" style="background-color: var(--dyn-primary)"></div>
+              <div class="swatch" style="background-color: var(--dyn-secondary)"></div>
+              <div class="swatch" style="background-color: var(--dyn-accent)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features-section container">
+      <div class="bento-grid">
+        <div class="bento-card">
+          <i data-lucide="scan-face" class="bento-icon" width="32" height="32"></i>
+          <h3>The Biometric Scan</h3>
+          <p>Using your device camera, Aura maps your exact skin undertones and architectural bone structure in seconds.</p>
+        </div>
+        <div class="bento-card">
+          <i data-lucide="layers" class="bento-icon" width="32" height="32"></i>
+          <h3>Capsule Math</h3>
+          <p>Buy 10 pieces. Generate 24 outfits. Complete harmony.</p>
+        </div>
+        <div class="bento-card">
+          <i data-lucide="calendar-clock" class="bento-icon" width="32" height="32"></i>
+          <h3>Daily Stylist</h3>
+          <p>Syncs with your calendar and local weather to build your morning outfit automatically.</p>
+        </div>
+        <div class="bento-card">
+          <i data-lucide="shirt" class="bento-icon" width="32" height="32"></i>
+          <h3>Wardrobe Digitization</h3>
+          <p>Scan the tags of what you own. Aura ensures every new purchase works with your existing closet.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+    const themeIcon = document.getElementById('themeIcon');
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = htmlEl.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', newTheme);
+      themeIcon.setAttribute('data-lucide', newTheme === 'dark' ? 'moon' : 'sun');
+      lucide.createIcons();
+    });
+
+    // Stylist Engine Data
+    const engineData = {
+      seasons: {
+        winter: {
+          primary: 'oklch(25% 0.05 250)', // Deep Navy/Charcoal
+          secondary: 'oklch(40% 0.1 200)', // Cool Teal
+          accent: 'oklch(85% 0.02 250)', // Icy Silver
+          rationale_color: 'high-contrast icy tones'
+        },
+        autumn: {
+          primary: 'oklch(40% 0.08 45)', // Warm Brown
+          secondary: 'oklch(55% 0.12 70)', // Olive/Mustard
+          accent: 'oklch(60% 0.15 45)', // Terracotta
+          rationale_color: 'rich, muted earth tones'
+        },
+        spring: {
+          primary: 'oklch(85% 0.05 90)', // Warm Cream
+          secondary: 'oklch(70% 0.15 140)', // Bright Green
+          accent: 'oklch(75% 0.18 55)', // Coral
+          rationale_color: 'bright, clear, warm tones'
+        }
+      },
+      bodies: {
+        dramatic: {
+          top: { title: "Structured Wool Blazer", desc: "Sharp, geometric lapels respect your strong vertical line." },
+          bot: { title: "Tapered Charcoal Trouser", desc: "Clean drape without breaking the silhouette." },
+          shoe: { title: "Pointed Leather Boot", desc: "Elongates the line, providing architectural support." },
+          rationale_shape: 'sharp tailoring to honor your natural architecture.'
+        },
+        romantic: {
+          top: { title: "Draped Silk Blouse", desc: "Soft, waist-emphasizing drape to honor your curves." },
+          bot: { title: "High-Waist Wide Leg", desc: "Flowing fabric accommodates softness without stiffness." },
+          shoe: { title: "Rounded Kitten Heel", desc: "Delicate and curved, avoiding harsh geometric lines." },
+          rationale_shape: 'soft draping and waist-emphasis to honor your curves.'
+        }
+      }
+    };
+
+    let currentSeason = 'winter';
+    let currentBody = 'dramatic';
+
+    const root = document.documentElement;
+    
+    function updateEngine() {
+      const sData = engineData.seasons[currentSeason];
+      const bData = engineData.bodies[currentBody];
+
+      // Update Colors via CSS Vars
+      root.style.setProperty('--dyn-primary', sData.primary);
+      root.style.setProperty('--dyn-secondary', sData.secondary);
+      root.style.setProperty('--dyn-accent', sData.accent);
+
+      // Update Text
+      document.getElementById('top-title').textContent = bData.top.title;
+      document.getElementById('top-desc').textContent = bData.top.desc;
+      document.getElementById('bot-title').textContent = bData.bot.title;
+      document.getElementById('bot-desc').textContent = bData.bot.desc;
+      document.getElementById('shoe-title').textContent = bData.shoe.title;
+      document.getElementById('shoe-desc').textContent = bData.shoe.desc;
+
+      // Update Rationale
+      const seasonName = document.querySelector(`.season-btn[data-season="${currentSeason}"]`).textContent;
+      const bodyName = document.querySelector(`.body-btn[data-body="${currentBody}"]`).textContent.split(' ')[0];
+      
+      document.getElementById('rationale-desc').textContent = 
+        `"For a ${seasonName} ${bodyName}, we reject generic trends. Instead, we utilize ${sData.rationale_color} and ${bData.rationale_shape}"`;
+    }
+
+    // Bind Controls
+    document.querySelectorAll('.season-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentSeason = e.target.getAttribute('data-season');
+        updateEngine();
+      });
+    });
+
+    document.querySelectorAll('.body-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.body-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentBody = e.target.getAttribute('data-body');
+        updateEngine();
+      });
+    });
+
+  </script>
+</body>
+</html>
